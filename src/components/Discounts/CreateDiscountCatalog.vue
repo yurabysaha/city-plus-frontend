@@ -41,6 +41,7 @@
 <script>
     import SelectPlace from "./SelectPlace"
     import SelectCategory from "./SelectCategory"
+    import discountCatalogService from "@/services/discount-catalog-service"
 
     export default {
         data() {
@@ -89,19 +90,15 @@
                 formData.append('category', this.selectedCategory);
                 formData.append('place', this.selectedPlace);
 
-                this.$http
-                    .post('discount-catalogs/', formData, {
-                        headers: {
-                            'content-type': 'multipart/form-data'
-                        }
-                    })
-                    .then(response => {
+                discountCatalogService.create(formData)
+                    .then(() => {
                         this.name = '';
                         this.selectedCategory = null;
                         this.selectedPlace = null;
                         this.imageName = '';
                         this.imageFile = '';
                         this.imageUrl = '';
+                        this.$emit("catalog-created")
                     })
             },
         }

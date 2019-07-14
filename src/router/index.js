@@ -4,12 +4,13 @@ import Login from '@/components/Auth/Login'
 import Registration from '@/components/Auth/Registration'
 import Map from '@/components/Map'
 import Topics from '@/components/Topics/Topics'
-import Discounts from '@/components/Discounts/Discounts'
+import DiscountCatalogs from '@/components/Discounts/DiscountCatalogs'
 import MyDiscountCatalogs from '@/components/Discounts/MyDiscountCatalogs'
 import Events from '@/components/Events/Events'
 import EventDetail from '@/components/Events/EventDetail'
 import EditProfile from '@/components/Profile/EditProfile'
 import FriendList from '@/components/Friends/FriendList'
+import DiscountList from "@/components/Discounts/DiscountList";
 
 
 Vue.use(VueRouter);
@@ -37,14 +38,19 @@ export const router = new VueRouter({
             component: Topics
         },
         {
-            path: '/discounts',
-            name: 'discounts',
-            component: Discounts,
+            path: '/discount-catalogs',
+            name: 'discount-catalogs',
+            component: DiscountCatalogs,
         },
         {
             path: '/discounts/my',
             name: 'my-discount-catalogs',
             component: MyDiscountCatalogs
+        },
+        {
+            path: '/discount-catalogs/:catalog_id/discounts',
+            name: 'discounts-for-catalog',
+            component: DiscountList
         },
         {
             path: '/events',

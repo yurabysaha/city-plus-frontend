@@ -56,7 +56,7 @@ export default {
             items : [
                 { title: 'City-Online', icon: 'map', link: '/map'},
                 { title: 'Topics', icon: 'group', link: '/topics'},
-                { title: 'Discounts', icon: 'store', link: '/discounts'},
+                { title: 'Discounts', icon: 'store', link: '/discount-catalogs'},
                 { title: 'Events', icon: 'event', link: '/events'},
                 { title: 'Friends', icon: 'event', link: '/friends'},
                 ],

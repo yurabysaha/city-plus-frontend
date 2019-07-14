@@ -15,7 +15,7 @@
       <v-icon>person</v-icon>
     </v-btn>
 
-    <create-discount-catalog></create-discount-catalog>
+    <create-discount-catalog @catalog-created="fetchData"></create-discount-catalog>
 
     <v-layout v-for="(value, propertyName) in catalogsByCategories"
               :key="propertyName" class="mb-4">
@@ -59,6 +59,7 @@
 
 <script>
     import CreateDiscountCatalog from "./CreateDiscountCatalog"
+    import discountCatalogService from "@/services/discount-catalog-service"
 
     export default {
 
@@ -73,7 +74,7 @@
         },
         watch: {
             // при изменениях маршрута запрашиваем данные снова
-            '$route': 'fetchData'
+            '$route': 'fetchData',
         },
         computed: {
             catalogsByCategories() {
@@ -82,8 +83,7 @@
         },
         methods: {
             fetchData() {
-                this.$http
-                    .get('/discount-catalogs/by_categories/')
+                discountCatalogService.getDiscountCatalogsByCategories()
                     .then(response => (this.$store.dispatch('groupDiscountCatalogsByCategories', response.data)));
             },
         }

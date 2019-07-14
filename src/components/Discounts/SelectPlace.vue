@@ -14,13 +14,16 @@
 
 <script>
     export default {
-
+        props: {
+          selected: {
+            default: null
+          }
+        },
         data() {
             return {
                 places: [],
                 search: null,
                 loading: false,
-                selected: null
             }
         },
 

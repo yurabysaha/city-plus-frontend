@@ -1,66 +1,81 @@
 <template>
-  <v-layout row wrap>
-    <div v-for="item in myDiscountCatalogs"
-         :key="item.id">
-      <v-badge
-              :color="item.is_published ? 'green' : 'red'"
-              right
-              overlap
-      >
-      <template v-slot:badge>
-        <v-tooltip bottom>
-          <template v-slot:activator="{ on }">
-            <v-icon v-on="on"
-                    dark
-                    small
+    <v-layout row wrap>
+
+        <edit-discount-catalog v-if="modalVisible"
+                               @dialog-closed="dialogClosed"
+                               :catalogId="catalogId">
+        </edit-discount-catalog>
+
+
+        <div v-for="item in myDiscountCatalogs"
+             :key="item.id">
+            <v-badge
+                    :color="item.is_published ? 'green' : 'red'"
+                    right
+                    overlap
             >
-              {{item.is_published ? 'done' : 'clear'}}
-            </v-icon>
-          </template>
-          <span>{{item.is_published ? 'Your Catalog already published!' : 'Your Catalog is not published yet!'}}</span>
-        </v-tooltip>
-      </template>
-      <v-hover>
+                <template v-slot:badge>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-icon v-on="on"
+                                    dark
+                                    small
+                            >
+                                {{item.is_published ? 'done' : 'clear'}}
+                            </v-icon>
+                        </template>
+                        <span>{{item.is_published ? 'Your Catalog already published!' : 'Your Catalog is not published yet!'}}</span>
+                    </v-tooltip>
+                </template>
+                <v-hover>
 
-          <v-card
-              slot-scope="{ hover }"
-              :class="`elevation-${hover ? 12 : 2}`"
-              width="344"
-              class="ml-3 mb-3"
-      >
-        <v-img
-                :aspect-ratio="16/9"
-                :src="item.image"
-        ></v-img>
-        <v-card-title>
-          <div>
-            <span class="headline">{{ item.name | maxLength }}</span>
-            <div class="d-flex">
-              <div class="ml-2 grey--text text--darken-2">
-                <span>Discounts: {{ item.discounts_count}}</span>
-              </div>
-            </div>
-          </div>
-          <v-spacer></v-spacer>
-          <v-btn icon class="mr-0 ml-0"> <v-icon dark small> edit </v-icon>
-          </v-btn>
-        </v-card-title>
-      </v-card>
-    </v-hover>
+                    <v-card
+                            slot-scope="{ hover }"
+                            :class="`elevation-${hover ? 12 : 2}`"
+                            width="344"
+                            class="ml-3 mb-3"
+                    >
+                        <v-img
+                                :aspect-ratio="16/9"
+                                :src="item.image"
+                        ></v-img>
+                        <v-card-title>
+                            <div>
+                                <span class="headline">{{ item.name | maxLength }}</span>
+                                <div class="d-flex">
+                                    <div class="ml-2 grey--text text--darken-2">
+                                        <span>Discounts: {{ item.discounts_count}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <v-spacer></v-spacer>
+                            <v-btn @click.stop="openEditModal(item.id)" icon class="mr-0 ml-0">
+                                <v-icon dark small> edit</v-icon>
+                            </v-btn>
+                        </v-card-title>
+                    </v-card>
+                </v-hover>
 
-    </v-badge>
+            </v-badge>
 
-    </div>
-  </v-layout>
+        </div>
+    </v-layout>
 </template>
 
 <script>
+    import discountCatalogService from "@/services/discount-catalog-service"
+    import EditDiscountCatalog from "./EditDiscountCatalog";
+
     export default {
+        components: {EditDiscountCatalog},
         data() {
-            return {}
+            return {
+                modalVisible: false,
+                catalogId: null
+            }
         },
         created() {
-            this.fetchData()
+            this.fetchData();
         },
         watch: {
             '$route': 'fetchData'
@@ -72,14 +87,23 @@
         },
         methods: {
             fetchData() {
-                this.$http
-                    .get('/discount-catalogs/my/')
+                discountCatalogService.getMy()
                     .then(response => (this.$store.dispatch('setMyDiscountCatalogs', response.data.results)));
+            },
+            openEditModal(catalogId) {
+                this.catalogId = catalogId;
+                this.modalVisible = true
+            },
+            dialogClosed() {
+                this.fetchData();
+                this.modalVisible = false
             },
         },
         filters: {
             maxLength(value) {
-                if (value.length > 20) { return value.substring(0, 20) + '...'; }
+                if (value.length > 20) {
+                    return value.substring(0, 20) + '...';
+                }
                 return value;
             }
         }
