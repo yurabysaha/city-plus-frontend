@@ -28,6 +28,7 @@
                                     prepend-icon="lock"
                                     name="password"
                                     label="Password"
+                                    v-on:keyup.enter="onSubmit"
                                     type="password">
                             </v-text-field>
                         </v-form>

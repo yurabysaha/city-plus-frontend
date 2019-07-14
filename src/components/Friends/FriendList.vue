@@ -2,7 +2,7 @@
   <v-layout row>
     <v-flex xs12 sm6 offset-sm3>
       <user-profile-read-only  v-if="modalVisible"
-                               @friendRemoved="friendRemoved()"
+                               @friendRemoved="friendRemoved"
                                @close="modalVisible = false"
                                :userId="profileUserId">
       </user-profile-read-only>
