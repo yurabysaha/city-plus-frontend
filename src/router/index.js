@@ -35,23 +35,37 @@ export const router = new VueRouter({
         {
             path: '/topics',
             name: 'topics',
-            component: Topics
+            component: Topics,
+            meta: {
+                title: 'Topics'
+            }
         },
         {
             path: '/discount-catalogs',
             name: 'discount-catalogs',
             component: DiscountCatalogs,
-        },
-        {
-            path: '/discounts/my',
-            name: 'my-discount-catalogs',
-            component: MyDiscountCatalogs
+            meta: {
+                title: 'Catalog'
+            },
         },
         {
             path: '/discount-catalogs/:catalog_id/discounts',
             name: 'discounts-for-catalog',
-            component: DiscountList
+            component: DiscountList,
+            meta: {
+                title: "Catalog's Discounts"
+            }
+
         },
+        {
+            path: '/discounts/my',
+            name: 'my-discount-catalogs',
+            component: MyDiscountCatalogs,
+            meta: {
+                title: 'My Catalogs'
+            }
+        },
+
         {
             path: '/events',
             name: 'events',

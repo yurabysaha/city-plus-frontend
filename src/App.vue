@@ -39,7 +39,8 @@
     </v-toolbar>
     <v-content>
       <v-container fluid>
-        <router-view></router-view>
+          <v-breadcrumbs :items="bread" divider=">"></v-breadcrumbs>
+          <router-view></router-view>
       </v-container>
     </v-content>
     <v-footer app></v-footer>
@@ -61,6 +62,12 @@ export default {
                 { title: 'Friends', icon: 'event', link: '/friends'},
                 ],
         }
+    },
+    computed: {
+      bread() {
+          debugger;
+          return this.$route.path.split()
+      }
     },
     methods: {
         logout() {
