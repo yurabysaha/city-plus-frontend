@@ -1,11 +1,12 @@
 <template>
     <v-layout row wrap>
 
-        <edit-discount-catalog v-if="modalVisible"
-                               @dialog-closed="dialogClosed"
-                               :catalogId="catalogId">
-        </edit-discount-catalog>
-
+        <discount-catalog-modal
+                @dialog-closed="dialogClosed"
+                :catalogId="catalogId"
+                :action="'edit'"
+        >
+        </discount-catalog-modal>
 
         <div v-for="item in myDiscountCatalogs"
              :key="item.id">
@@ -64,10 +65,10 @@
 
 <script>
     import discountCatalogService from "@/services/discount-catalog-service"
-    import EditDiscountCatalog from "./EditDiscountCatalog";
+    import DiscountCatalogModal from "./DiscountCatalogModal";
 
     export default {
-        components: {EditDiscountCatalog},
+        components: {DiscountCatalogModal},
         data() {
             return {
                 modalVisible: false,

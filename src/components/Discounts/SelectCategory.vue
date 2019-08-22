@@ -3,8 +3,8 @@
             :items="categories"
             :loading="loading"
             item-text="name"
-            v-model="selected"
-            @change="$emit('selected', selected)"
+            :value="selected"
+            @change="$emit('selected', $event)"
             item-value="id"
             label="Category"
             placeholder="Start typing to Search"
@@ -17,7 +17,10 @@
         props: {
             selected: {
                 default: null
-            }
+            },
+            parent: {
+                default: null
+            },
         },
         data() {
             return {
@@ -31,7 +34,6 @@
             this.fetchData()
         },
         watch: {
-            // при изменениях маршрута запрашиваем данные снова
             '$route': 'fetchData',
             search(val) {
                 val && val !== this.select && this.searchCategoryOnApi(val)
@@ -39,14 +41,20 @@
         },
         methods: {
             fetchData() {
+                const url = this.parent ?
+                    `/discount-category/?is_top=${!!this.parent}&top=${this.parent}` :
+                    `/discount-category/?is_top=${!!this.parent}`;
                 this.$http
-                    .get('/discount-category/?is_top=true')
+                    .get(url)
                     .then(response => this.categories = response.data);
             },
             searchCategoryOnApi(v) {
                 this.loading = true;
+                const url = this.parent ?
+                    `/discount-category/?is_top=${!!this.parent}&top=${this.parent}` :
+                    `/discount-category/?is_top=${!!this.parent}`;
                 this.$http
-                    .get(`/discount-category/?is_top=true&name=${v}`)
+                    .get(`${url}&name=${v}`)
                     .then(response => this.categories = response.data)
                     .finally(() => this.loading = false)
             }

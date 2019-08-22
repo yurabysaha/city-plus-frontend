@@ -10,7 +10,8 @@ import VuetifyConfirm from 'vuetify-confirm'
 
 Vue.config.productionTip = false;
 
-axios.defaults.baseURL = 'http://3.120.96.33/';
+axios.defaults.baseURL = 'http://127.0.0.1:8000/';
+// axios.defaults.baseURL = 'http://3.120.96.33/';
 
 axios.interceptors.response.use(function (response) {
     return response

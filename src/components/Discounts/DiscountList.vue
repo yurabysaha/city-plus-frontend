@@ -1,9 +1,6 @@
 <template>
     <v-layout row wrap>
-<!--        <edit-discount-catalog v-if="modalVisible"-->
-<!--                               @dialog-closed="dialogClosed"-->
-<!--                               :catalogId="catalogId">-->
-<!--        </edit-discount-catalog>-->
+<create-discount></create-discount>
         <div v-for="item in discounts.results"
              :key="item.id">
             <v-badge
@@ -47,10 +44,13 @@
 <script>
     import discountCatalogService from '@/services/discount-catalog-service'
     import NoItems from "@/components/Shared/NoItems"
+    import CreateDiscount from "./CreateDiscount";
+
 
     export default {
         components: {
-            NoItems
+            NoItems,
+            CreateDiscount,
         },
         props: ['catalogId'],
         data() {

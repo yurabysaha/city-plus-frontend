@@ -65,7 +65,6 @@ export default {
     },
     computed: {
       bread() {
-          debugger;
           return this.$route.path.split()
       }
     },

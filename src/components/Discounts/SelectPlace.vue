@@ -2,8 +2,8 @@
   <v-autocomplete
           :items="places"
           :loading="loading"
-          v-model="selected"
-          @change="$emit('selected', selected)"
+          :value="selected"
+          @change="$emit('selected', $event)"
           item-text="name"
           item-value="id"
           label="Place"
