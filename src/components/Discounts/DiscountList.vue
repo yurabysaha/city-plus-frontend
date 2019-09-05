@@ -1,6 +1,7 @@
 <template>
     <v-layout row wrap>
-<create-discount></create-discount>
+        <discount-modal action="create" @discount-created="fetchData"></discount-modal>
+        <discount-modal action="edit" :discountId="discountId" @dialog-closed="dialogClosed" @discount-created="fetchData"></discount-modal>
         <div v-for="item in discounts.results"
              :key="item.id">
             <v-badge
@@ -29,7 +30,7 @@
                                 </div>
                             </div>
                             <v-spacer></v-spacer>
-                            <v-btn @click.stop="openEditModal(item.id)" icon class="mr-0 ml-0">
+                            <v-btn v-if="owner(item)" @click.stop="openEditModal(item.id)" icon class="mr-0 ml-0">
                                 <v-icon dark small> edit</v-icon>
                             </v-btn>
                         </v-card-title>
@@ -37,43 +38,43 @@
                 </v-hover>
             </v-badge>
         </div>
-        <no-items :text="'This catalog does not have any discounts yet'" v-if="!discounts.count"></no-items>
+        <no-items text="'This catalog does not have any discounts yet'" v-if="!discounts.count"></no-items>
     </v-layout>
 </template>
 
 <script>
     import discountCatalogService from '@/services/discount-catalog-service'
     import NoItems from "@/components/Shared/NoItems"
-    import CreateDiscount from "./CreateDiscount";
+    import DiscountModal from "./DiscountModal";
 
 
     export default {
         components: {
             NoItems,
-            CreateDiscount,
+            DiscountModal,
         },
-        props: ['catalogId'],
         data() {
-          return {
-              discounts: null,
-              items: [
-                  {
-                      text: 'Dashboard',
-                      disabled: false,
-                      href: 'breadcrumbs_dashboard'
-                  },
-                  {
-                      text: 'Link 1',
-                      disabled: false,
-                      href: 'breadcrumbs_link_1'
-                  },
-                  {
-                      text: 'Link 2',
-                      disabled: true,
-                      href: 'breadcrumbs_link_2'
-                  }
-              ]
-          }
+            return {
+                discounts: [],
+                discountId: null,
+                items: [
+                    {
+                        text: 'Dashboard',
+                        disabled: false,
+                        href: 'breadcrumbs_dashboard'
+                    },
+                    {
+                        text: 'Link 1',
+                        disabled: false,
+                        href: 'breadcrumbs_link_1'
+                    },
+                    {
+                        text: 'Link 2',
+                        disabled: true,
+                        href: 'breadcrumbs_link_2'
+                    }
+                ]
+            }
         },
         created() {
             this.fetchData()
@@ -82,6 +83,24 @@
             fetchData() {
                 discountCatalogService.getDiscountsForCatalogbyId(this.$route.params.catalog_id)
                     .then(response => this.discounts = response.data)
+            },
+            openEditModal(itemId) {
+                this.discountId = itemId;
+            },
+            dialogClosed() {
+                this.discountId = null;
+            },
+            owner(item) {
+                return item.user === this.$store.getters.user.user
+            },
+
+        },
+        filters: {
+            maxLength(value) {
+                if (value.length > 20) {
+                    return value.substring(0, 20) + '...';
+                }
+                return value;
             }
         }
     }

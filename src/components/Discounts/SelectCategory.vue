@@ -13,12 +13,14 @@
 </template>
 
 <script>
+    import discountCategoryService from '../../services/discount-category-service'
+
     export default {
         props: {
             selected: {
                 default: null
             },
-            parent: {
+            parentCategory: {
                 default: null
             },
         },
@@ -29,34 +31,37 @@
                 loading: false,
             }
         },
-
-        created() {
-            this.fetchData()
-        },
         watch: {
-            '$route': 'fetchData',
             search(val) {
                 val && val !== this.select && this.searchCategoryOnApi(val)
-            }
+            },
+            parentCategory() {
+                this.fetchData()
+            },
         },
         methods: {
             fetchData() {
-                const url = this.parent ?
-                    `/discount-category/?is_top=${!!this.parent}&top=${this.parent}` :
-                    `/discount-category/?is_top=${!!this.parent}`;
-                this.$http
-                    .get(url)
-                    .then(response => this.categories = response.data);
+                let response;
+                if (this.parentCategory) {
+                    response = discountCategoryService.getSubCategoriesByParentId(this.parentCategory)
+                } else {
+                    response = discountCategoryService.getOnlyTop()
+                }
+                response.then(response => this.categories = response.data);
             },
             searchCategoryOnApi(v) {
+                let response;
                 this.loading = true;
-                const url = this.parent ?
-                    `/discount-category/?is_top=${!!this.parent}&top=${this.parent}` :
-                    `/discount-category/?is_top=${!!this.parent}`;
-                this.$http
-                    .get(`${url}&name=${v}`)
+
+                if (this.parentCategory) {
+                    response = discountCategoryService.searchInSubCategories(this.parentCategory, v)
+                } else {
+                    response = discountCategoryService.searchInTop(v)
+                }
+
+                response
                     .then(response => this.categories = response.data)
-                    .finally(() => this.loading = false)
+                    .finally(() => this.loading = false);
             }
         }
     }

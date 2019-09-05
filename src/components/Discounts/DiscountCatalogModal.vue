@@ -62,6 +62,10 @@
                 imageFile: undefined,
             }
         },
+        components: {
+            SelectPlace,
+            SelectCategory,
+        },
         created() {
             this.fetchData()
         },
@@ -77,10 +81,6 @@
                     this.dialog = true
                 }
             }
-        },
-        components: {
-            SelectPlace,
-            SelectCategory,
         },
         methods: {
             onFilePicked(e) {
